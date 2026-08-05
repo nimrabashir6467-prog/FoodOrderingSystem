@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickBite - Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.php">🍔 QuickBite</a>
+
+        <div>
+            <a href="index.php" class="btn btn-light btn-sm">Home</a>
+            <a href="login.php" class="btn btn-light btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Dashboard -->
+<div class="container mt-5">
+
+    <h2 class="text-center text-danger mb-4">
+        Welcome to Dashboard
+    </h2>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow text-center p-3">
+                <h4>🍔 Foods</h4>
+                <p>Manage Food Menu</p>
+                <a href="admin/add-food.php" class="btn btn-danger">Add Food</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow text-center p-3">
+                <h4>📦 Orders</h4>
+                <p>View Customer Orders</p>
+                <a href="admin-orders.php" class="btn btn-danger">Manage Orders</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow text-center p-3">
+                <h4>👤 Profile</h4>
+                <p>Account Information</p>
+                <a href="profile.php" class="btn btn-danger">View Profile</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center p-3 mt-5">
+    © 2026 QuickBite
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

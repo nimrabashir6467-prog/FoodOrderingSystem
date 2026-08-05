@@ -1,0 +1,21 @@
+body{
+    background-color:#f8f9fa;
+}
+
+.card{
+    border-radius:10px;
+}
+
+.card img{
+    height:200px;
+    object-fit:cover;
+}
+
+.card:hover{
+    transform:scale(1.03);
+    transition:0.3s;
+}
+
+footer{
+    margin-top:30px;
+}
