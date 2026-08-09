@@ -1,4 +1,4 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
     collection,
@@ -18,8 +18,26 @@ const placeOrder = async (name, price) => {
 
     try {
 
+        // Check if customer is logged in
+
+        const user = auth.currentUser;
+
+        if (!user) {
+
+            alert("Please login first.");
+
+            window.location.href = "login.html";
+
+            return;
+
+        }
+
+
+        // Save order with current user's UID
+
         await addDoc(collection(db, "orders"), {
 
+            userId: user.uid,
             foodName: name,
             price: price,
             quantity: 1,
@@ -28,9 +46,12 @@ const placeOrder = async (name, price) => {
 
         });
 
-        alert("Order Placed Successfully");
 
-    } catch (error) {
+        alert("Order Placed Successfully ✅");
+
+    }
+
+    catch (error) {
 
         console.error("Order Error:", error);
 
@@ -47,23 +68,31 @@ const displayFood = (foods) => {
 
     foodContainer.innerHTML = "";
 
+
     if (foods.length === 0) {
 
         foodContainer.innerHTML = `
+
             <div class="col-12 text-center">
+
                 <p class="text-danger">
                     No food items found.
                 </p>
+
             </div>
+
         `;
 
         return;
+
     }
 
 
     foods.forEach((food) => {
 
-        const category = food.category || "Fast Food";
+        const category =
+            food.category || "Fast Food";
+
 
         foodContainer.innerHTML += `
 
@@ -78,17 +107,23 @@ const displayFood = (foods) => {
                         style="height:200px; object-fit:cover;"
                     >
 
+
                     <div class="card-body text-center">
 
-                        <h4>${food.name}</h4>
+                        <h4>
+                            ${food.name}
+                        </h4>
+
 
                         <p>
                             Category: ${category}
                         </p>
 
+
                         <p>
                             Price: Rs. ${food.price}
                         </p>
+
 
                         <button
                             class="btn btn-danger"
@@ -117,22 +152,31 @@ const loadFood = async () => {
 
     try {
 
-        console.log("Loading food from Firebase...");
-
-        const querySnapshot = await getDocs(
-            collection(db, "food_items")
+        console.log(
+            "Loading food from Firebase..."
         );
+
+
+        const querySnapshot =
+            await getDocs(
+                collection(db, "food_items")
+            );
+
 
         console.log(
             "Food documents found:",
             querySnapshot.size
         );
 
+
         allFoods = [];
+
 
         querySnapshot.forEach((doc) => {
 
-            const foodData = doc.data();
+            const foodData =
+                doc.data();
+
 
             console.log(
                 "Food:",
@@ -140,31 +184,39 @@ const loadFood = async () => {
                 foodData
             );
 
+
             allFoods.push(foodData);
 
         });
 
+
         displayFood(allFoods);
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "Firebase Error:",
             error
         );
 
+
         foodContainer.innerHTML = `
+
             <div class="col-12 text-center">
 
                 <p class="text-danger">
                     Firebase Error:
                 </p>
 
+
                 <p>
                     ${error.message}
                 </p>
 
             </div>
+
         `;
 
     }
@@ -179,22 +231,26 @@ searchFood.addEventListener("keyup", () => {
     const searchValue =
         searchFood.value.toLowerCase();
 
-    const filteredFoods = allFoods.filter((food) => {
 
-        return food.name
-            .toLowerCase()
-            .includes(searchValue);
+    const filteredFoods =
+        allFoods.filter((food) => {
 
-    });
+            return food.name
+                .toLowerCase()
+                .includes(searchValue);
+
+        });
+
 
     displayFood(filteredFoods);
 
 });
 
 
-// ================= ORDER FUNCTION =================
+// ================= MAKE ORDER FUNCTION AVAILABLE =================
 
-window.placeOrder = placeOrder;
+window.placeOrder =
+    placeOrder;
 
 
 // ================= START =================
