@@ -1,187 +1,219 @@
 import { db } from "./firebase.js";
 
-import { 
-    collection, 
-    getDocs, 
-    addDoc 
+import {
+collection,
+getDocs,
+addDoc
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-
 
 const foodContainer = document.getElementById("food-container");
 const searchFood = document.getElementById("searchFood");
 
-
 let allFoods = [];
 
-
-
-// Place Order Function
+// ================= PLACE ORDER =================
 
 const placeOrder = async (name, price) => {
 
-    try {
+```
+try {
 
-        await addDoc(collection(db, "orders"), {
+    await addDoc(collection(db, "orders"), {
 
-            foodName: name,
-            price: price,
-            quantity: 1,
-            status: "Pending",
-            orderDate: new Date()
+        foodName: name,
+        price: price,
+        quantity: 1,
+        status: "Pending",
+        orderDate: new Date()
 
-        });
+    });
 
+    alert("Order Placed Successfully ✅");
 
-        alert("Order Placed Successfully ✅");
+}
 
-    } 
-    catch(error) {
+catch (error) {
 
-        console.log("Order Error:", error);
+    console.error("Order Error:", error);
 
-    }
+    alert("Order failed: " + error.message);
+
+}
+```
 
 };
 
-
-
-
-// Display Food Function
+// ================= DISPLAY FOOD =================
 
 const displayFood = (foods) => {
 
+```
+foodContainer.innerHTML = "";
 
-    foodContainer.innerHTML = "";
+if (foods.length === 0) {
 
+    foodContainer.innerHTML = `
+        <div class="text-center">
+            <p class="text-danger">
+                No food items found.
+            </p>
+        </div>
+    `;
 
-    foods.forEach((food) => {
-
-
-        foodContainer.innerHTML += `
-
-        <div class="col-md-4">
-
-            <div class="card shadow mb-4">
-
-    <img
-        src="${food.image}"
-        class="card-img-top"
-        alt="${food.name}"
-        style="height:200px; object-fit:cover;"
-    >
-
-    <div class="card-body text-center">
-
-        <h4>${food.name}</h4>
+    return;
+}
 
 
-                    <p>
+foods.forEach((food) => {
+
+    foodContainer.innerHTML += `
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow h-100">
+
+            <img
+                src="${food.image}"
+                class="card-img-top"
+                alt="${food.name}"
+                style="height:200px; object-fit:cover;"
+            >
+
+            <div class="card-body text-center">
+
+                <h4>${food.name}</h4>
+
+                <p>
                     Category: ${food.category}
-                    </p>
+                </p>
 
-
-                    <p>
+                <p>
                     Price: Rs. ${food.price}
-                    </p>
+                </p>
 
-
-
-                    <button 
+                <button
                     class="btn btn-danger"
                     onclick="placeOrder('${food.name}', ${food.price})">
 
                     Order
 
-                    </button>
-
-
-                </div>
+                </button>
 
             </div>
 
         </div>
 
-        `;
+    </div>
 
+    `;
 
-    });
-
+});
+```
 
 };
 
-
-
-
-// Load Food From Firebase
+// ================= LOAD FOOD FROM FIREBASE =================
 
 const loadFood = async () => {
 
+```
+try {
 
-    try {
+    console.log("Loading food from Firebase...");
 
-
-        const querySnapshot = await getDocs(collection(db, "food_items"));
-
-
-        querySnapshot.forEach((doc)=>{
-
-
-            allFoods.push(doc.data());
+    const querySnapshot =
+        await getDocs(
+            collection(db, "food_items")
+        );
 
 
-        });
+    console.log(
+        "Food documents found:",
+        querySnapshot.size
+    );
 
 
-
-        displayFood(allFoods);
-
+    allFoods = [];
 
 
-    }
-    catch(error){
+    querySnapshot.forEach((doc) => {
 
+        console.log(
+            "Food:",
+            doc.id,
+            doc.data()
+        );
 
-        console.log("Firebase Error:", error);
-
-
-    }
-
-
-};
-
-
-
-
-// Search Functionality
-
-searchFood.addEventListener("keyup", ()=>{
-
-
-    let searchValue = searchFood.value.toLowerCase();
-
-
-
-    let filteredFoods = allFoods.filter((food)=>{
-
-
-        return food.name.toLowerCase().includes(searchValue);
-
+        allFoods.push(doc.data());
 
     });
 
 
+    displayFood(allFoods);
 
-    displayFood(filteredFoods);
+}
+
+catch (error) {
+
+    console.error(
+        "Firebase Error:",
+        error
+    );
 
 
+    foodContainer.innerHTML = `
+
+        <div class="text-center">
+
+            <p class="text-danger">
+
+                Firebase Error:
+
+            </p>
+
+            <p>
+
+                ${error.message}
+
+            </p>
+
+        </div>
+
+    `;
+
+}
+```
+
+};
+
+// ================= SEARCH =================
+
+searchFood.addEventListener("keyup", () => {
+
+```
+const searchValue =
+    searchFood.value.toLowerCase();
+
+
+const filteredFoods =
+    allFoods.filter((food) => {
+
+        return food.name
+            .toLowerCase()
+            .includes(searchValue);
+
+    });
+
+
+displayFood(filteredFoods);
+```
 
 });
 
-
-
-
+// Make placeOrder available to HTML button
 
 window.placeOrder = placeOrder;
 
+// Load food
 
 loadFood();
