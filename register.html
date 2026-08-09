@@ -1,151 +1,478 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>QuickBite - Register</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- Custom CSS -->
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
 </head>
+
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar navbar-dark bg-danger">
+
     <div class="container">
-        <a class="navbar-brand fw-bold" href="index.html">🍔 QuickBite</a>
+
+
+        <a href="index.html"
+           class="navbar-brand fw-bold">
+
+            🍔 QuickBite
+
+        </a>
+
 
         <div>
-            <a href="index.html" class="btn btn-light btn-sm">Home</a>
-            <a href="login.html" class="btn btn-light btn-sm">Login</a>
+
+            <a href="index.html"
+               class="btn btn-light btn-sm">
+
+                Home
+
+            </a>
+
+
+            <a href="login.html"
+               class="btn btn-light btn-sm">
+
+                Login
+
+            </a>
+
         </div>
+
+
     </div>
+
 </nav>
 
 
-<div class="container mt-5" style="max-width:500px;">
 
-    <div class="card shadow p-4">
+<!-- ================= REGISTER ================= -->
 
-        <h2 class="text-center text-danger mb-4">Create Account</h2>
+<div class="container mt-5">
 
-        <form id="registerForm">
+    <div class="row justify-content-center">
 
-            <div class="mb-3">
-                <label>Full Name</label>
-                <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+        <div class="col-md-5">
+
+
+            <div class="card shadow p-4">
+
+
+                <h2 class="text-center text-danger mb-4">
+
+                    Create Account
+
+                </h2>
+
+
+
+                <form id="registerForm">
+
+
+                    <!-- NAME -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Full Name
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="name"
+                            class="form-control"
+                            placeholder="Enter your name"
+                            required>
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-control"
+                            placeholder="Enter your email"
+                            required>
+
+                    </div>
+
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Password
+                        </label>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-control"
+                            placeholder="Enter password"
+                            minlength="6"
+                            required>
+
+                    </div>
+
+
+
+                    <!-- REGISTER BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger w-100">
+
+                        Register
+
+                    </button>
+
+
+                </form>
+
+
+
+                <!-- MESSAGE -->
+
+                <p
+                    id="message"
+                    class="text-center mt-3">
+                </p>
+
+
+
+                <p class="text-center mt-3">
+
+                    Already have an account?
+
+                    <a href="login.html">
+
+                        Login
+
+                    </a>
+
+                </p>
+
+
             </div>
 
-            <div class="mb-3">
-                <label>Email</label>
-                <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
-            </div>
 
-            <div class="mb-3">
-                <label>Password</label>
-                <input type="password" id="password" class="form-control" placeholder="Enter password" required>
-            </div>
-
-            <button type="submit" class="btn btn-danger w-100">
-                Register
-            </button>
-
-        </form>
-
-        <p id="message" class="text-center mt-3"></p>
-
-        <p class="text-center mt-3">
-            Already have an account?
-            <a href="login.html">Login</a>
-        </p>
+        </div>
 
     </div>
 
 </div>
 
 
-<footer class="bg-dark text-white text-center p-3 mt-5">
-    © 2026 QuickBite
-</footer>
 
+<!-- ================= FIREBASE ================= -->
 
 <script type="module">
 
-import { db } from "./firebase.js";
+
+/* ================= IMPORTS ================= */
 
 import {
+
+    initializeApp
+
+}
+
+from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+
+
+import {
+
     getAuth,
     createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+}
+
+from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
 
 import {
+
+    getFirestore,
     doc,
     setDoc
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+}
 
+from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+
+
+/* ================= FIREBASE CONFIG ================= */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBVoU3UMmWPji03TS_XU_ZNHCGtY5fJrPQ",
-  authDomain: "quickbite-21e58.firebaseapp.com",
-  projectId: "quickbite-21e58",
-  storageBucket: "quickbite-21e58.firebasestorage.app",
-  messagingSenderId: "874037081220",
-  appId: "1:874037081220:web:f7812a30f6350075aabed1"
+
+    apiKey: "AIzaSyBVoU3UMmWPji03TS_XU_ZNHCGtY5fJrPQ",
+
+    authDomain: "quickbite-21e58.firebaseapp.com",
+
+    projectId: "quickbite-21e58",
+
+    storageBucket: "quickbite-21e58.firebasestorage.app",
+
+    messagingSenderId: "874037081220",
+
+    appId: "1:874037081220:web:f7812a30f6350075aabed1"
+
 };
 
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+
+/* ================= INITIALIZE ================= */
+
+const app =
+    initializeApp(firebaseConfig);
 
 
-document.getElementById("registerForm").addEventListener("submit", async (e)=>{
-
-    e.preventDefault();
-
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
+const auth =
+    getAuth(app);
 
 
-    try{
-
-        const userCredential = await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
+const db =
+    getFirestore(app);
 
 
-        const user = userCredential.user;
+
+/* ================= FORM ================= */
+
+const registerForm =
+    document.getElementById("registerForm");
 
 
-        await setDoc(doc(db,"user",user.uid),{
-            name:name,
-            email:email,
-            role:"customer"
-        });
+const message =
+    document.getElementById("message");
 
 
-        document.getElementById("message").innerHTML =
-        "Registration Successful ✅";
 
+/* ================= REGISTER ================= */
+
+registerForm.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+
+        /* Get values */
+
+        const name =
+            document.getElementById("name")
+            .value
+            .trim();
+
+
+        const email =
+            document.getElementById("email")
+            .value
+            .trim();
+
+
+        const password =
+            document.getElementById("password")
+            .value;
+
+
+
+        /* Show loading */
+
+        message.textContent =
+            "Creating account...";
+
+        message.className =
+            "text-center mt-3 text-primary";
+
+
+
+        try {
+
+
+            /* ================= CREATE AUTH ACCOUNT ================= */
+
+            const userCredential =
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+
+            const user =
+                userCredential.user;
+
+
+
+            console.log(
+                "Account created:",
+                user.uid
+            );
+
+
+
+            /* ================= SAVE USER IN FIRESTORE ================= */
+
+            await setDoc(
+
+                doc(
+                    db,
+                    "user",
+                    user.uid
+                ),
+
+                {
+
+                    name: name,
+
+                    email: email,
+
+                    role: "customer"
+
+                }
+
+            );
+
+
+
+            console.log(
+                "User saved in Firestore"
+            );
+
+
+
+            /* ================= SUCCESS ================= */
+
+            message.textContent =
+                "Account created successfully! Redirecting...";
+
+
+            message.className =
+                "text-center mt-3 text-success";
+
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "login.html";
+
+                },
+                1500
+            );
+
+
+        }
+
+
+        catch (error) {
+
+
+            console.error(
+                "Registration Error:",
+                error
+            );
+
+
+
+            /* ================= ERROR MESSAGES ================= */
+
+            if (
+                error.code ===
+                "auth/email-already-in-use"
+            ) {
+
+                message.textContent =
+                    "This email is already registered.";
+
+            }
+
+
+            else if (
+                error.code ===
+                "auth/weak-password"
+            ) {
+
+                message.textContent =
+                    "Password must be at least 6 characters.";
+
+            }
+
+
+            else if (
+                error.code ===
+                "auth/invalid-email"
+            ) {
+
+                message.textContent =
+                    "Please enter a valid email.";
+
+            }
+
+
+            else {
+
+                message.textContent =
+                    "Registration failed: " +
+                    error.message;
+
+            }
+
+
+            message.className =
+                "text-center mt-3 text-danger";
+
+        }
 
     }
-    catch(error){
 
-        document.getElementById("message").innerHTML =
-        error.message;
-
-    }
-
-});
+);
 
 </script>
 
 
 </body>
+
 </html>
+```
