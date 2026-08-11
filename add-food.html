@@ -1,49 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Add Food - QuickBite</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="../css/style.css">
+
 </head>
+
+
 <body>
 
+
 <!-- Navbar -->
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+
     <div class="container">
-        <a class="navbar-brand fw-bold" href="../dashboard.html">🍔 QuickBite</a>
+
+        <a class="navbar-brand fw-bold"
+           href="../dashboard.html">
+
+            🍔 QuickBite
+
+        </a>
+
+        <a href="../dashboard.html"
+           class="btn btn-light btn-sm">
+
+            Dashboard
+
+        </a>
+
     </div>
+
 </nav>
 
-<!-- Add Food Form -->
-<div class="container mt-5" style="max-width:600px;">
+
+
+<!-- Add Food -->
+
+<div class="container mt-5"
+     style="max-width:600px;">
 
     <div class="card shadow p-4">
 
-        <h2 class="text-center text-danger mb-4">Add Food</h2>
+        <h2 class="text-center text-danger mb-4">
 
-        <form>
+            🍔 Add Food
 
-            <div class="mb-3">
-                <label>Food Name</label>
-                <input type="text" class="form-control" placeholder="Enter food name">
-            </div>
+        </h2>
 
-            <div class="mb-3">
-                <label>Price</label>
-                <input type="number" class="form-control" placeholder="Enter price">
-            </div>
+
+        <form id="addFoodForm">
+
+
+            <!-- Food Name -->
 
             <div class="mb-3">
-                <label>Upload Image</label>
-                <input type="file" class="form-control">
+
+                <label class="form-label">
+
+                    Food Name
+
+                </label>
+
+                <input
+                    type="text"
+                    id="foodName"
+                    class="form-control"
+                    placeholder="Enter food name"
+                    required>
+
             </div>
 
-            <button class="btn btn-danger w-100">
+
+
+            <!-- Category -->
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Category
+
+                </label>
+
+                <select
+                    id="category"
+                    class="form-control"
+                    required>
+
+                    <option value="">
+
+                        Select Category
+
+                    </option>
+
+                    <option value="Fast Food">
+
+                        Fast Food
+
+                    </option>
+
+                    <option value="Beverages">
+
+                        Beverages
+
+                    </option>
+
+                    <option value="Snacks">
+
+                        Snacks
+
+                    </option>
+
+                    <option value="Desserts">
+
+                        Desserts
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- Price -->
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Price
+
+                </label>
+
+                <input
+                    type="number"
+                    id="price"
+                    class="form-control"
+                    placeholder="Enter price"
+                    min="1"
+                    required>
+
+            </div>
+
+
+
+            <!-- Image -->
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Upload Image
+
+                </label>
+
+                <input
+                    type="file"
+                    id="foodImage"
+                    class="form-control"
+                    accept="image/*"
+                    required>
+
+            </div>
+
+
+
+            <!-- Preview -->
+
+            <div
+                id="imagePreview"
+                class="text-center mb-3">
+            </div>
+
+
+
+            <!-- Button -->
+
+            <button
+                type="submit"
+                id="addFoodBtn"
+                class="btn btn-danger w-100">
+
                 Add Food
+
             </button>
+
 
         </form>
 
@@ -51,11 +207,257 @@
 
 </div>
 
-<footer class="bg-dark text-white text-center p-3 mt-5">
+
+
+<!-- Footer -->
+
+<footer
+    class="bg-dark text-white text-center p-3 mt-5">
+
     © 2026 QuickBite
+
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script type="module">
+
+import { db } from "../firebase.js";
+
+
+import {
+    collection,
+    addDoc
+}
+from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+
+
+const form =
+    document.getElementById("addFoodForm");
+
+const imageInput =
+    document.getElementById("foodImage");
+
+const imagePreview =
+    document.getElementById("imagePreview");
+
+const addFoodBtn =
+    document.getElementById("addFoodBtn");
+
+
+
+// Image Preview
+
+imageInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            imageInput.files[0];
+
+        if (!file) {
+
+            imagePreview.innerHTML = "";
+
+            return;
+
+        }
+
+
+        const imageURL =
+            URL.createObjectURL(file);
+
+
+        imagePreview.innerHTML = `
+
+            <img
+                src="${imageURL}"
+                style="
+                    width:150px;
+                    height:150px;
+                    object-fit:cover;
+                    border-radius:10px;
+                "
+                class="shadow">
+
+        `;
+
+    }
+);
+
+
+
+// Add Food
+
+form.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+
+        const name =
+            document
+                .getElementById("foodName")
+                .value
+                .trim();
+
+
+        const category =
+            document
+                .getElementById("category")
+                .value;
+
+
+        const price =
+            Number(
+                document
+                    .getElementById("price")
+                    .value
+            );
+
+
+        const file =
+            imageInput.files[0];
+
+
+        if (!file) {
+
+            alert(
+                "Please select a food image."
+            );
+
+            return;
+
+        }
+
+
+
+        try {
+
+            addFoodBtn.disabled = true;
+
+            addFoodBtn.innerText =
+                "Uploading Image...";
+
+
+
+            // Cloudinary Upload
+
+            const formData =
+                new FormData();
+
+            formData.append(
+                "file",
+                file
+            );
+
+            formData.append(
+                "upload_preset",
+                "quickbite_upload"
+            );
+
+
+
+            const cloudinaryResponse =
+                await fetch(
+                    "https://api.cloudinary.com/v1_1/wjfiolwv/image/upload",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+
+            if (!cloudinaryResponse.ok) {
+
+                throw new Error(
+                    "Cloudinary image upload failed."
+                );
+
+            }
+
+
+
+            const cloudinaryData =
+                await cloudinaryResponse.json();
+
+
+            const imageURL =
+                cloudinaryData.secure_url;
+
+
+
+            addFoodBtn.innerText =
+                "Saving Food...";
+
+
+
+            // Save Food in Firestore
+
+            await addDoc(
+                collection(db, "food_items"),
+                {
+
+                    name: name,
+
+                    category: category,
+
+                    price: price,
+
+                    image: imageURL
+
+                }
+            );
+
+
+
+            alert(
+                "Food Added Successfully ✅"
+            );
+
+
+
+            form.reset();
+
+            imagePreview.innerHTML = "";
+
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Add Food Error:",
+                error
+            );
+
+
+            alert(
+                "Food could not be added:\n"
+                + error.message
+            );
+
+        }
+
+        finally {
+
+            addFoodBtn.disabled = false;
+
+            addFoodBtn.innerText =
+                "Add Food";
+
+        }
+
+    }
+);
+
+</script>
+
 
 </body>
+
 </html>
