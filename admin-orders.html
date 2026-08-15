@@ -9,20 +9,13 @@
 
     <title>QuickBite - Manage Orders</title>
 
-
-    <!-- Bootstrap -->
-
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
-
-    <!-- Custom CSS -->
-
     <link rel="stylesheet" href="style.css">
 
 </head>
-
 
 <body>
 
@@ -40,7 +33,6 @@
             🍔 QuickBite
 
         </a>
-
 
         <a
             href="dashboard.html"
@@ -60,13 +52,11 @@
 
 <div class="container mt-5">
 
-
     <h2 class="text-center text-danger mb-4">
 
         📦 Manage Orders
 
     </h2>
-
 
     <div
         id="ordersContainer"
@@ -82,7 +72,6 @@
 
     </div>
 
-
 </div>
 
 
@@ -93,7 +82,6 @@
 
 import { db } from "./firebase.js";
 
-
 import {
 
     collection,
@@ -103,9 +91,7 @@ import {
     doc
 
 }
-
 from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-
 
 
 const ordersContainer =
@@ -121,6 +107,30 @@ async function loadOrders() {
 
         ordersContainer.innerHTML = "";
 
+
+        // Get Users
+
+        const usersSnapshot =
+            await getDocs(
+                collection(db, "user")
+            );
+
+
+        // Store users by their document ID
+
+        const users = {};
+
+
+        usersSnapshot.forEach((userDoc) => {
+
+            users[userDoc.id] =
+                userDoc.data();
+
+        });
+
+
+
+        // Get Orders
 
         const snapshot =
             await getDocs(
@@ -149,6 +159,7 @@ async function loadOrders() {
         }
 
 
+
         snapshot.forEach((orderDoc) => {
 
             const order =
@@ -159,6 +170,22 @@ async function loadOrders() {
                 orderDoc.id;
 
 
+
+            // Find customer using order userId
+
+            const customer =
+                users[order.userId];
+
+
+            const customerName =
+                customer?.name || "Not available";
+
+
+            const customerEmail =
+                customer?.email || "Not available";
+
+
+
             ordersContainer.innerHTML += `
 
                 <div class="col-md-4 mb-4">
@@ -167,34 +194,87 @@ async function loadOrders() {
 
 
                         <h4>
+
                             ${order.foodName}
+
                         </h4>
 
 
-                        <p>
-                            Customer ID:
-                            ${order.userId || "Not available"}
-                        </p>
-
 
                         <p>
-                            Quantity:
-                            ${order.quantity}
-                        </p>
 
-
-                        <p>
-                            Price:
-                            Rs. ${order.price || order.totalPrice}
-                        </p>
-
-
-                        <p>
-                            Status:
                             <strong>
-                                ${order.status}
+                                Customer Name:
                             </strong>
+
+                            ${customerName}
+
                         </p>
+
+
+
+                        <p>
+
+                            <strong>
+                                Customer Email:
+                            </strong>
+
+                            ${customerEmail}
+
+                        </p>
+
+
+
+                        <p>
+
+                            <strong>
+                                Customer ID:
+                            </strong>
+
+                            ${order.userId || "Not available"}
+
+                        </p>
+
+
+
+                        <p>
+
+                            <strong>
+                                Quantity:
+                            </strong>
+
+                            ${order.quantity}
+
+                        </p>
+
+
+
+                        <p>
+
+                            <strong>
+                                Price:
+                            </strong>
+
+                            Rs. ${order.price || order.totalPrice}
+
+                        </p>
+
+
+
+                        <p>
+
+                            <strong>
+                                Status:
+                            </strong>
+
+                            <strong>
+
+                                ${order.status}
+
+                            </strong>
+
+                        </p>
+
 
 
                         <button
@@ -204,6 +284,7 @@ async function loadOrders() {
                             Complete Order
 
                         </button>
+
 
 
                         <button
